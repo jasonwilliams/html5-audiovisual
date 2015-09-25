@@ -3,8 +3,38 @@
     <head>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
         <script src="av.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            #logo {
+                position: absolute;
+                left: 10px;
+                top: 0;
+                display: block;
+                width: 70px;
+                height: 70px;
+                text-indent: -999px;
+                background: url('http://static.bbci.co.uk/radio/840/1.50/img/mobile/icons/networks/480/bbc_radio_one.png') no-repeat;
+            }
+            
+            #audioElem {
+                position: absolute;
+                left: -999px;
+                visibility: hidden;
+            }
+            
+            #canvas {
+                height: 100vh; 
+                width: 100vw; 
+                display: block;
+            }
+        </style>
     </head>
     <body>
-
+        <canvas id="canvas" width="800" height="512" style="display: block; background-color: black ;"></canvas>
+        <h1 id="logo">BBC Radio 1</h1>
     </body>
 </html>

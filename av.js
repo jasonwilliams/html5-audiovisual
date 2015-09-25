@@ -24,28 +24,56 @@ function setBackground(val) {
     }
 
     var rgb = 'rgb(' + val + ',' + val + ',' + val + ')';
-    $('body').css('background', rgb);
+    $('#canvas').css('background', rgb);
 }
 
 $(function () {
     var audio = new Audio();
-    //audio.src='test.mp3';
     audio.src = '/stream';
-    //audio.src = 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one.m3u8';
-    //audio.src = 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p';
     audio.controls = true;
-    //audio.autoplay = true;
+    audio.autoplay = true;
     audio.type = "audio/mpeg";
+    audio.setAttribute('id', 'audioElem');
     document.body.appendChild(audio);
 
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
+    var context = new AudioContext();
+    var audioBuffer;
+    var sourceNode;
+    var analyser;
+    var javascriptNode;
+    
+    // canvas
+    var ctx = $("#canvas").get()[0].getContext("2d");
+    
+    // create gradient
+    var gradient = ctx.createLinearGradient(0,0,0,500);
+    gradient.addColorStop(1,'#000000');
+    gradient.addColorStop(0.75,'#ff0000');
+    gradient.addColorStop(0.25,'#ffff00');
+    gradient.addColorStop(0,'#ffffff');
+    
+    // load the sound
+    setupAudioNodes();
 
-    var analyser = context.createAnalyser();
-    analyser.smoothingTimeConstant = 0.3;
-    analyser.fftSize = 1024;
-
+    // push nodes to analyser
     nodes.push(analyser);
+    
+    function setupAudioNodes()
+    {
+        javascriptNode = context.createScriptProcessor(2048, 1, 1);
+        javascriptNode.connect(context.destination);
+        
+        // setup a analyzer
+        analyser = context.createAnalyser();
+        analyser.smoothingTimeConstant = 0;
+        analyser.fftSize = 1024;
+        
+        // create a buffer source node
+        sourceNode = context.createBufferSource();
+        sourceNode.connect(analyser);
+        analyser.connect(javascriptNode);
+        sourceNode.connect(context.destination);
+    }
 
     var procNode = context.createScriptProcessor(2048, 1, 1);
     procNode.onaudioprocess = function (audioProcessingEvent) {
@@ -70,15 +98,27 @@ $(function () {
     };
 
     nodes.push(procNode);
-
-    //var gainNode = context.createGain();
-
+    
     var source = context.createMediaElementSource(audio);
     nodes.push(source);
     source.connect(analyser);
     analyser.connect(procNode);
     procNode.connect(context.destination);
-    //source.connect(gainNode);
-    //gainNode.connect(context.destination);
-    //gainNode.gain.value = 0.1;
+    
+    javascriptNode.onaudioprocess = function()
+    {
+        var array =  new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+        
+        ctx.clearRect(0, 0, 1000, 325);
+        ctx.fillStyle=gradient;
+        
+        drawSpectrum(array);
+    }
+    function drawSpectrum(array) {
+        for ( var i = 0; i < (array.length); i++ ){
+            var value = array[i];
+            ctx.fillRect(i*5,325-value,3,325);
+        }
+    };
 });
