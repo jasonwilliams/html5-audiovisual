@@ -4,7 +4,6 @@ var nodes = [];
 function getAverageVolume(array) {
     var values = 0;
     var average;
-    //console.log(array.length);
 
     var length = array.length;
 
@@ -56,7 +55,6 @@ $(function () {
     // load the sound
     setupAudioNodes();
 
-    // push nodes to analyser
     nodes.push(analyser);
     
     function setupAudioNodes()
@@ -85,7 +83,6 @@ $(function () {
         analyser.getByteFrequencyData(array);
         var average = getAverageVolume(array)
         smoothAvg = (1 - smoothing) * average + smoothing * smoothAvg;
-        //console.log(average);
         setTimeout(function () {
             setBackground(parseInt(smoothAvg * 0.75, 10));
         }, 0);
