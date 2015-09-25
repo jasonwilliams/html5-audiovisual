@@ -47,7 +47,7 @@ $(function () {
     var ctx = $("#canvas").get()[0].getContext("2d");
     
     // create gradient
-    var gradient = ctx.createLinearGradient(0,0,0,500);
+    var gradient = ctx.createLinearGradient(0,0,0,700);
     gradient.addColorStop(1,'#000000');
     gradient.addColorStop(0.75,'#ff0000');
     gradient.addColorStop(0.25,'#ffff00');
@@ -110,12 +110,23 @@ $(function () {
     var lpf = context.createBiquadFilter();
     nodes.push(lpf);
     lpf.type = 'lowpass';
-    lpf.frequency.value = 50.0;
+    lpf.frequency.value = 22000.0;
+    
+    var hpf = context.createBiquadFilter();
+    nodes.push(hpf);
+    hpf.type = 'highpass';
+    hpf.frequency.value = 0.0;
+
+    var gain = context.createGain();
+    nodes.push(gain);
+    gain.gain.value = 1;
 
     source.connect(analyser);
     analyser.connect(procNode);
     procNode.connect(lpf);
-    lpf.connect(context.destination);
+    lpf.connect(hpf);
+    hpf.connect(gain);
+    gain.connect(context.destination);
     
     javascriptNode.onaudioprocess = function()
     {
@@ -136,8 +147,25 @@ $(function () {
 
     $('#lpfSlider').slider({
         slide: function (event, ui) {
-            var val = Math.log(ui.value) / Math.log(10) * 10000;
+            var val = Math.exp(ui.value / 10);
             lpf.frequency.value = val;
-        }
+        },
+        value: 100
+    });
+
+    $('#hpfSlider').slider({
+        slide: function (event, ui) {
+            var val = Math.exp(ui.value / 10);
+            hpf.frequency.value = val;
+        },
+        value: 0
+    });
+    
+    $('#gainSlider').slider({
+        slide: function (event, ui) {
+            var val = ui.value / 100;
+            gain.gain.value = val;
+        },
+        value: 100
     });
 });
