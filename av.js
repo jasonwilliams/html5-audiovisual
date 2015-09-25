@@ -121,12 +121,12 @@ $(function () {
     nodes.push(gain);
     gain.gain.value = 1;
 
-    source.connect(analyser);
-    analyser.connect(procNode);
-    procNode.connect(lpf);
+    source.connect(lpf);
     lpf.connect(hpf);
     hpf.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(analyser);
+    analyser.connect(procNode);
+    procNode.connect(context.destination);
     
     javascriptNode.onaudioprocess = function()
     {
