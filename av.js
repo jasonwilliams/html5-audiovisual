@@ -46,7 +46,7 @@ $(function () {
     var ctx = $("#canvas").get()[0].getContext("2d");
     
     // create gradient
-    var gradient = ctx.createLinearGradient(0,0,0,500);
+    var gradient = ctx.createLinearGradient(0,0,0,700);
     gradient.addColorStop(1,'#000000');
     gradient.addColorStop(0.75,'#ff0000');
     gradient.addColorStop(0.25,'#ffff00');
@@ -78,7 +78,7 @@ $(function () {
     var procNode = context.createScriptProcessor(2048, 1, 1);
 
     var smoothAvg = 0.0;
-    var smoothing = 0.7;
+    var smoothing = 0.85;
     procNode.onaudioprocess = function (audioProcessingEvent) {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);

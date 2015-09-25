@@ -9,13 +9,25 @@
                 padding: 0;
             }
             
+            #canvas-container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            
+            #canvas {
+                height: 100vh; 
+                width: 100vw; 
+                display: block;
+            }
+            
             #logo {
                 position: absolute;
                 left: 10px;
                 top: 0;
                 display: block;
-                width: 70px;
-                height: 70px;
+                width: 75px;
+                height: 75px;
                 text-indent: -999px;
                 background: url('http://static.bbci.co.uk/radio/840/1.50/img/mobile/icons/networks/480/bbc_radio_one.png') no-repeat;
             }
@@ -25,16 +37,12 @@
                 left: -999px;
                 visibility: hidden;
             }
-            
-            #canvas {
-                height: 100vh; 
-                width: 100vw; 
-                display: block;
-            }
         </style>
     </head>
     <body>
-        <canvas id="canvas" width="800" height="512" style="display: block; background-color: black ;"></canvas>
-        <h1 id="logo">BBC Radio 1</h1>
+        <div id="canvas-container">
+            <canvas id="canvas" width="800" height="512" style="display: block; background-color: black ;"></canvas>
+            <h1 id="logo">BBC Radio 1</h1>
+        </div>
     </body>
 </html>
