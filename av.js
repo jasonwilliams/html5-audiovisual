@@ -76,13 +76,17 @@ $(function () {
     }
 
     var procNode = context.createScriptProcessor(2048, 1, 1);
+
+    var smoothAvg = 0.0;
+    var smoothing = 0.7;
     procNode.onaudioprocess = function (audioProcessingEvent) {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
         var average = getAverageVolume(array)
+        smoothAvg = (1 - smoothing) * average + smoothing * smoothAvg;
         //console.log(average);
         setTimeout(function () {
-            setBackground(parseInt(average / 2.0, 10));
+            setBackground(parseInt(smoothAvg * 0.75, 10));
         }, 0);
 
         var inputBuffer = audioProcessingEvent.inputBuffer;
