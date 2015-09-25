@@ -163,7 +163,10 @@ $(function () {
     
     $('#gainSlider').slider({
         slide: function (event, ui) {
-            var val = ui.value / 100;
+            var val = 0;
+            if (ui.value > 0) {
+                val = Math.exp(ui.value / 100 * 5 - 4) / Math.exp(1);
+            }
             gain.gain.value = val;
         },
         value: 100
