@@ -1,3 +1,4 @@
+// XXX: Workaround for Audio API GC bug, maybe not needed.
 var nodes = [];
 
 function getAverageVolume(array) {
@@ -78,7 +79,7 @@ $(function () {
     var procNode = context.createScriptProcessor(2048, 1, 1);
 
     var smoothAvg = 0.0;
-    var smoothing = 0.7;
+    var smoothing = 0.85;
     procNode.onaudioprocess = function (audioProcessingEvent) {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
@@ -105,9 +106,16 @@ $(function () {
     
     var source = context.createMediaElementSource(audio);
     nodes.push(source);
+
+    var lpf = context.createBiquadFilter();
+    nodes.push(lpf);
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 50.0;
+
     source.connect(analyser);
     analyser.connect(procNode);
-    procNode.connect(context.destination);
+    procNode.connect(lpf);
+    lpf.connect(context.destination);
     
     javascriptNode.onaudioprocess = function()
     {
@@ -125,4 +133,11 @@ $(function () {
             ctx.fillRect(i*5,325-value,3,325);
         }
     };
+
+    $('#lpfSlider').slider({
+        slide: function (event, ui) {
+            var val = Math.log(ui.value) / Math.log(10) * 10000;
+            lpf.frequency.value = val;
+        }
+    });
 });
