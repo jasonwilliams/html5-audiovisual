@@ -52,27 +52,14 @@ $(function () {
     gradient.addColorStop(0.25,'#ffff00');
     gradient.addColorStop(0,'#ffffff');
     
-    // load the sound
-    setupAudioNodes();
-
-    nodes.push(analyser);
+    javascriptNode = context.createScriptProcessor(2048, 1, 1);
+    nodes.push(javascriptNode);
     
-    function setupAudioNodes()
-    {
-        javascriptNode = context.createScriptProcessor(2048, 1, 1);
-        javascriptNode.connect(context.destination);
-        
-        // setup a analyzer
-        analyser = context.createAnalyser();
-        analyser.smoothingTimeConstant = 0;
-        analyser.fftSize = 1024;
-        
-        // create a buffer source node
-        sourceNode = context.createBufferSource();
-        sourceNode.connect(analyser);
-        analyser.connect(javascriptNode);
-        sourceNode.connect(context.destination);
-    }
+    // setup a analyzer
+    analyser = context.createAnalyser();
+    nodes.push(analyser);
+    analyser.smoothingTimeConstant = 0;
+    analyser.fftSize = 1024;
 
     var procNode = context.createScriptProcessor(2048, 1, 1);
 
@@ -123,7 +110,9 @@ $(function () {
     hpf.connect(gain);
     gain.connect(analyser);
     analyser.connect(procNode);
+    analyser.connect(javascriptNode);
     procNode.connect(context.destination);
+    javascriptNode.connect(context.destination);
     
     javascriptNode.onaudioprocess = function()
     {
