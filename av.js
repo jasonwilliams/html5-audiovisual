@@ -28,8 +28,9 @@ function setBackground(val) {
 }
 
 $(function () {
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audio = new Audio();
-    audio.src = '/stream';
+    audio.src = 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_vlow/ak/bbc_radio_one.m3u8';
     audio.controls = true;
     audio.autoplay = true;
     audio.type = "audio/mpeg";
@@ -41,20 +42,20 @@ $(function () {
     var sourceNode;
     var analyser;
     var javascriptNode;
-    
+
     // canvas
     var ctx = $("#canvas").get()[0].getContext("2d");
-    
+
     // create gradient
     var gradient = ctx.createLinearGradient(0,0,0,700);
     gradient.addColorStop(1,'#000000');
     gradient.addColorStop(0.75,'#ff0000');
     gradient.addColorStop(0.25,'#ffff00');
     gradient.addColorStop(0,'#ffffff');
-    
+
     javascriptNode = context.createScriptProcessor(2048, 1, 1);
     nodes.push(javascriptNode);
-    
+
     // setup a analyzer
     analyser = context.createAnalyser();
     nodes.push(analyser);
@@ -87,7 +88,7 @@ $(function () {
     };
 
     nodes.push(procNode);
-    
+
     var source = context.createMediaElementSource(audio);
     nodes.push(source);
 
@@ -95,7 +96,7 @@ $(function () {
     nodes.push(lpf);
     lpf.type = 'lowpass';
     lpf.frequency.value = 22000.0;
-    
+
     var hpf = context.createBiquadFilter();
     nodes.push(hpf);
     hpf.type = 'highpass';
@@ -113,15 +114,15 @@ $(function () {
     analyser.connect(javascriptNode);
     procNode.connect(context.destination);
     javascriptNode.connect(context.destination);
-    
+
     javascriptNode.onaudioprocess = function()
     {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
-        
+
         ctx.clearRect(0, 0, 1000, 325);
         ctx.fillStyle=gradient;
-        
+
         drawSpectrum(array);
     }
     function drawSpectrum(array) {
@@ -146,15 +147,15 @@ $(function () {
         },
         value: 0
     });
-    
-    $('#gainSlider').slider({
-        slide: function (event, ui) {
-            var val = 0;
-            if (ui.value > 0) {
-                val = Math.exp(ui.value / 100 * 5 - 4) / Math.exp(1);
-            }
-            gain.gain.value = val;
-        },
-        value: 100
-    });
+
+    // $('#gainSlider').slider({
+    //     slide: function (event, ui) {
+    //         var val = 0;
+    //         if (ui.value > 0) {
+    //             val = Math.exp(ui.value / 100 * 5 - 4) / Math.exp(1);
+    //         }
+    //         gain.gain.value = val;
+    //     },
+    //     value: 100
+    // });
 });
