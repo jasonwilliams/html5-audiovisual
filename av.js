@@ -30,7 +30,7 @@ function setBackground(val) {
 $(function () {
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audio = new Audio();
-    audio.src = 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_vlow/ak/bbc_radio_one.m3u8';
+    audio.src = '/stream';
     audio.controls = true;
     audio.autoplay = true;
     audio.type = "audio/mpeg";
@@ -56,7 +56,7 @@ $(function () {
     javascriptNode = context.createScriptProcessor(2048, 1, 1);
     nodes.push(javascriptNode);
 
-    // setup a analyzer
+    // setup an analyzer
     analyser = context.createAnalyser();
     nodes.push(analyser);
     analyser.smoothingTimeConstant = 0;
@@ -92,26 +92,15 @@ $(function () {
     var source = context.createMediaElementSource(audio);
     nodes.push(source);
 
-    var lpf = context.createBiquadFilter();
-    nodes.push(lpf);
-    lpf.type = 'lowpass';
-    lpf.frequency.value = 22000.0;
-
-    var hpf = context.createBiquadFilter();
-    nodes.push(hpf);
-    hpf.type = 'highpass';
-    hpf.frequency.value = 0.0;
 
     var gain = context.createGain();
     nodes.push(gain);
     gain.gain.value = 1;
 
-    source.connect(lpf);
-    lpf.connect(hpf);
-    hpf.connect(gain);
+    source.connect(gain);
     gain.connect(analyser);
     analyser.connect(procNode);
-    analyser.connect(javascriptNode);
+    // analyser.connect(javascriptNode);
     procNode.connect(context.destination);
     javascriptNode.connect(context.destination);
 
@@ -128,34 +117,8 @@ $(function () {
     function drawSpectrum(array) {
         for ( var i = 0; i < (array.length); i++ ){
             var value = array[i];
-            ctx.fillRect(i*5,325-value,3,325);
+            ctx.fillRect(i*5,325-value,2,325);
         }
     };
 
-    $('#lpfSlider').slider({
-        slide: function (event, ui) {
-            var val = Math.exp(ui.value / 10);
-            lpf.frequency.value = val;
-        },
-        value: 100
-    });
-
-    $('#hpfSlider').slider({
-        slide: function (event, ui) {
-            var val = Math.exp(ui.value / 10);
-            hpf.frequency.value = val;
-        },
-        value: 0
-    });
-
-    // $('#gainSlider').slider({
-    //     slide: function (event, ui) {
-    //         var val = 0;
-    //         if (ui.value > 0) {
-    //             val = Math.exp(ui.value / 100 * 5 - 4) / Math.exp(1);
-    //         }
-    //         gain.gain.value = val;
-    //     },
-    //     value: 100
-    // });
 });

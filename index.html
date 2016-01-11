@@ -10,19 +10,19 @@
                 margin: 0;
                 padding: 0;
             }
-            
+
             #canvas-container {
                 position: relative;
                 width: 100%;
                 height: 100%;
             }
-            
+
             #canvas {
-                height: 100vh; 
-                width: 100vw; 
+                height: 100vh;
+                width: 100vw;
                 display: block;
             }
-            
+
             #logo {
                 position: absolute;
                 left: 10px;
@@ -33,7 +33,7 @@
                 text-indent: -999px;
                 background: url('http://static.bbci.co.uk/radio/840/1.50/img/mobile/icons/networks/480/bbc_radio_one.png') no-repeat;
             }
-            
+
             #audioElem {
                 position: absolute;
                 left: -999px;
@@ -46,14 +46,14 @@
                 width: 200px;
                 left: 20px;
             }
-            
+
             #hpfSlider {
                 position: absolute;
                 bottom: 10px;
                 width: 200px;
                 left: 260px;
             }
-            
+
             #gainSlider {
                 position: absolute;
                 bottom: 10px;
@@ -66,9 +66,6 @@
         <div id="canvas-container">
             <canvas id="canvas" width="800" height="512" style="display: block; background-color: black ;"></canvas>
             <h1 id="logo">BBC Radio 1</h1>
-            <div id="lpfSlider"></div>
-            <div id="hpfSlider"></div>
-            <div id="gainSlider"></div>
         </div>
     </body>
 </html>
