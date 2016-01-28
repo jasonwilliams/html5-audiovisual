@@ -28,9 +28,19 @@ function setBackground(val) {
 }
 
 $(function () {
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    var audio = new Audio();
-    audio.src = '/stream';
+    // --- dash stuf --
+    var url = 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/dash/nonuk/dash_low/ak/bbc_radio_one.mpd';
+    var context = new Dash.di.DashContext();
+    var player = new MediaPlayer(context);
+    var audio = document.querySelector('#audioPlayer');
+    player.startup();
+    player.attachView(audio);
+    player.attachSource(url)
+    // ---------
+
+    // var AudioContext = window.AudioContext || window.webkitAudioContext;
+    // var audio = new Audio();
+    // audio.src = '/stream';
     audio.controls = true;
     audio.autoplay = true;
     audio.type = "audio/mpeg";
@@ -71,9 +81,9 @@ $(function () {
         analyser.getByteFrequencyData(array);
         var average = getAverageVolume(array)
         smoothAvg = (1 - smoothing) * average + smoothing * smoothAvg;
-        setTimeout(function () {
-            setBackground(parseInt(smoothAvg * 0.75, 10));
-        }, 0);
+        // setTimeout(function () {
+        //     setBackground(parseInt(smoothAvg * 0.75, 10));
+        // }, 0);
 
         var inputBuffer = audioProcessingEvent.inputBuffer;
         var outputBuffer = audioProcessingEvent.outputBuffer;
@@ -109,15 +119,15 @@ $(function () {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
 
-        ctx.clearRect(0, 0, 1000, 325);
+        ctx.clearRect(0, 0, 1000, 300);
         ctx.fillStyle=gradient;
 
         drawSpectrum(array);
     }
     function drawSpectrum(array) {
-        for ( var i = 0; i < (array.length); i++ ){
+        for ( var i = 0; i < (array.length); i += 5 ){
             var value = array[i];
-            ctx.fillRect(i*5,325-value,2,325);
+            ctx.fillRect(i*1,300-value,1,300);
         }
     };
 

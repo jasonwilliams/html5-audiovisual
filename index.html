@@ -3,6 +3,7 @@
     <head>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src="http://emp.bbci.co.uk/emp/dashjs/2.0.3-1.5.1/dash.all.js"></script>
         <script src="av.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css">
         <style>
@@ -67,5 +68,16 @@
             <canvas id="canvas" width="800" height="512" style="display: block; background-color: black ;"></canvas>
             <h1 id="logo">BBC Radio 1</h1>
         </div>
+        <audio id="audioPlayer" autoplay="true"></audio>
+        <script>
+            // $(function() {
+            //     var url = 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/dash/nonuk/dash_low/ak/bbc_radio_one.mpd';
+            //     var context = new Dash.di.DashContext();
+            //     var player = new MediaPlayer(context);
+            //     player.startup();
+            //     player.attachView(document.querySelector('#audioPlayer'));
+            //     player.attachSource(url)
+            // });
+        </script>
     </body>
 </html>
