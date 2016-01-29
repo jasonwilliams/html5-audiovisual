@@ -119,15 +119,16 @@ $(function () {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
 
-        ctx.clearRect(0, 0, 1000, 325);
+        ctx.clearRect(0, 0, 1000, 600);
         ctx.fillStyle=gradient;
 
         drawSpectrum(array);
     }
     function drawSpectrum(array) {
+        console.log(array);
         for ( var i = 0; i < (array.length); i++ ){
             var value = array[i];
-            ctx.fillRect(i*5,325-value,2,325);
+            ctx.fillRect(i*5,600-value,2,325);
         }
     };
 
