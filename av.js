@@ -81,9 +81,9 @@ $(function () {
         analyser.getByteFrequencyData(array);
         var average = getAverageVolume(array)
         smoothAvg = (1 - smoothing) * average + smoothing * smoothAvg;
-        // setTimeout(function () {
-        //     setBackground(parseInt(smoothAvg * 0.75, 10));
-        // }, 0);
+        setTimeout(function () {
+            setBackground(parseInt(smoothAvg * 0.75, 10));
+        }, 0);
 
         var inputBuffer = audioProcessingEvent.inputBuffer;
         var outputBuffer = audioProcessingEvent.outputBuffer;
@@ -119,15 +119,15 @@ $(function () {
         var array =  new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(array);
 
-        ctx.clearRect(0, 0, 1000, 300);
+        ctx.clearRect(0, 0, 1000, 325);
         ctx.fillStyle=gradient;
 
         drawSpectrum(array);
     }
     function drawSpectrum(array) {
-        for ( var i = 0; i < (array.length); i += 5 ){
+        for ( var i = 0; i < (array.length); i++ ){
             var value = array[i];
-            ctx.fillRect(i*1,300-value,1,300);
+            ctx.fillRect(i*5,325-value,2,325);
         }
     };
 
